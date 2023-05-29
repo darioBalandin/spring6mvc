@@ -1,54 +1,99 @@
 package dario.springframework.spring6restmvc.services;
 
-import dario.springframework.spring6restmvc.controllers.CustomerController;
-import dario.springframework.spring6restmvc.model.Customer;
+import dario.springframework.spring6restmvc.model.CustomerDto;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Created by jt, Spring Framework Guru.
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
-    Map<UUID, Customer> customerMap;
+
+    private Map<UUID, CustomerDto> customerMap;
 
     public CustomerServiceImpl() {
-        this.customerMap = new HashMap<>();
-
-        Customer customer1 = Customer.builder()
+        CustomerDto customerDto1 = CustomerDto.builder()
                 .id(UUID.randomUUID())
-                .customerName("Customer 1")
-                .version("2.0")
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
-        Customer customer2 = Customer.builder()
-                .id(UUID.randomUUID())
-                .customerName("Customer 2")
-                .version("3.0")
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
-        Customer customer3 = Customer.builder()
-                .id(UUID.randomUUID())
-                .customerName("Customer 3")
-                .version("1.0")
+                .name("Customer 1")
+                .version(1)
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        this.customerMap.put(customer1.getId(), customer1);
-        this.customerMap.put(customer2.getId(), customer2);
-        this.customerMap.put(customer3.getId(), customer3);
+        CustomerDto customerDto2 = CustomerDto.builder()
+                .id(UUID.randomUUID())
+                .name("Customer 2")
+                .version(1)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
 
+        CustomerDto customerDto3 = CustomerDto.builder()
+                .id(UUID.randomUUID())
+                .name("Customer 3")
+                .version(1)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        customerMap = new HashMap<>();
+        customerMap.put(customerDto1.getId(), customerDto1);
+        customerMap.put(customerDto2.getId(), customerDto2);
+        customerMap.put(customerDto3.getId(), customerDto3);
     }
 
     @Override
-    public List<Customer> getCustomers() {
+    public void patchCustomerById(UUID customerId, CustomerDto customerDto) {
+        CustomerDto existing = customerMap.get(customerId);
+
+        if (StringUtils.hasText(customerDto.getName())) {
+            existing.setName(customerDto.getName());
+        }
+    }
+
+    @Override
+    public void deleteCustomerById(UUID customerId) {
+        customerMap.remove(customerId);
+    }
+
+    @Override
+    public void updateCustomerById(UUID customerId, CustomerDto customerDto) {
+        CustomerDto existing = customerMap.get(customerId);
+        existing.setName(customerDto.getName());
+    }
+
+    @Override
+    public CustomerDto saveNewCustomer(CustomerDto customerDto) {
+
+        CustomerDto savedCustomerDto = CustomerDto.builder()
+                .id(UUID.randomUUID())
+                .version(1)
+                .updateDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now())
+                .name(customerDto.getName())
+                .build();
+
+        customerMap.put(savedCustomerDto.getId(), savedCustomerDto);
+
+        return savedCustomerDto;
+    }
+
+    @Override
+    public CustomerDto getCustomerById(UUID uuid) {
+        return customerMap.get(uuid);
+    }
+
+    @Override
+    public List<CustomerDto> getAllCustomers() {
         return new ArrayList<>(customerMap.values());
     }
-
-    @Override
-    public Customer getCustomerById(UUID customerId) {
-        return this.customerMap.get(customerId);
-    }
 }
+
+
+
+
+

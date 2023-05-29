@@ -1,13 +1,21 @@
 package dario.springframework.spring6restmvc.services;
 
-import dario.springframework.spring6restmvc.model.Customer;
+import dario.springframework.spring6restmvc.model.CustomerDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CustomerService {
 
-    List<Customer> getCustomers();
+    CustomerDto getCustomerById(UUID uuid);
 
-    Customer getCustomerById(UUID customerId);
+    List<CustomerDto> getAllCustomers();
+
+    CustomerDto saveNewCustomer(CustomerDto customerDto);
+
+    void updateCustomerById(UUID customerId, CustomerDto customerDto);
+
+    void deleteCustomerById(UUID customerId);
+
+    void patchCustomerById(UUID customerId, CustomerDto customerDto);
 }

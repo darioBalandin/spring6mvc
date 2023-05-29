@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @Builder
 @Data
-public class Customer {
+public class CustomerDto {
 
     private UUID id;
-    private String customerName;
-    private String version;
+    private String name;
+    private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 }
